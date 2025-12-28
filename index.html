@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReadVerse+</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link
+    rel="icon"
+    href="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/favicon-logo.jpg?1744545778555"
+    type="image/png"
+  />
+  <style>
+    :root {
+      --primary: #4c2be2;
+      --primary-dark: #3a21b5;
+      --secondary: #8214ff;
+      --dark: #5d4bc0;
+      --light: #f8f9fa;
+      --success: #28a745;
+      --danger: #ff4757;
+      --warning: #ffc107;
+      --bg-color: #f5f5f5;
+      --text-color: #333;
+      --card-bg: white;
+      --border-color: #ddd;
+      --stat-card-bg: white;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 80px;
+      --header-height: 60px;
+    }
+
+    .dark-mode {
+      --primary: #7d5fff;
+      --primary-dark: #6a4ce6;
+      --secondary: #a162ff;
+      --dark: #9d8aff;
+      --light: #1a1a1a;
+      --success: #4caf50;
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --card-bg: #1e1e1e;
+      --border-color: #333;
+      --stat-card-bg: #252525;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      color: white;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--header-height);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      white-space: nowrap;
+      color: white;
+      text-decoration: none;
+    }
+
+    .sidebar-logo img {
+      height: 30px;
+    }
+
+    .sidebar-logo-text {
+      transition: opacity 0.3s;
+    }
+
+    .sidebar-menu {
+      flex: 1;
+      padding: 1rem 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      position: relative;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .sidebar-menu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .sidebar-menu a.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border-left: 4px solid white;
+    }
+
+    .sidebar-menu a i {
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+      margin-right: 12px;
+      transition: margin 0.3s;
+    }
+
+    .sidebar-menu .menu-title {
+      margin: 1.5rem 0 0.5rem 0;
+      padding: 0 1.5rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.5);
+      transition: all 0.3s;
+    }
+
+    .sidebar-footer {
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: center;
+    }
+
+    .sidebar-collapse {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .sidebar-collapse:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    .sidebar.collapsed .sidebar-logo-text,
+    .sidebar.collapsed .menu-title,
+    .sidebar.collapsed .nav-link-text {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .sidebar.collapsed .sidebar-menu a {
+      justify-content: center;
+      padding: 0.8rem 0;
+    }
+
+    .sidebar.collapsed .sidebar-menu a i {
+      margin-right: 0;
+    }
+
+    .sidebar.collapsed .sidebar-header {
+      justify-content: center;
+      padding: 1rem 0;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      transition: all 0.3s;
+      min-height: 100vh;
+    }
+
+    .main-content.expanded {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: var(--header-height);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .logo i {
+      color: #00ffdd;
+      font-size: 1.1rem;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 0.5rem 0;
+      min-width: 180px;
+      display: none;
+      z-index: 100;
+    }
+
+    .user-dropdown a {
+      display: block;
+      padding: 0.6rem 1rem;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .user-dropdown a:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .user-info:hover .user-dropdown {
+      display: block;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background-color: white;
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .search-filter {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 2px 12px rgba(138, 43, 226, 0.2);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.85rem;
+      color: var(--text-color);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      align-items: stretch;
+    }
+
+    .book-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .book-cover {
+      height: 0;
+      padding-top: 150%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .book-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background-color: var(--success);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .book-info {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .book-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .book-author {
+      color: #666;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .book-desc {
+      font-size: 0.85rem;
+      color: var(--text-color);
+      opacity: 0.8;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.4;
+    }
+
+    .book-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+
+    .action-btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .read-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+    }
+
+    .read-btn:hover {
+      background-color: var(--dark);
+    }
+
+    .fav-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+
+    .fav-btn.favorited {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .fav-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--stat-card-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--dark);
+    }
+
+    .stat-info p {
+      margin: 0;
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .no-books {
+      grid-column: 1/-1;
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.8;
+      padding: 3rem;
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem 0;
+      color: var(--dark);
+    }
+
+    .feature-desc {
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .about-content {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .about-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .about-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .about-title {
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--dark);
+    }
+
+    .about-version {
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: 0.9rem;
+      margin: 0.3rem 0 0 0;
+    }
+
+    .about-text {
+      color: var(--text-color);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .about-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .detail-card {
+      background: rgba(138, 43, 226, 0.05);
+      border-radius: 8px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    .detail-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    /* Create Story Form Styles */
+    .create-form {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      margin-top: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(76, 43, 226, 0.2);
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%235d4bc0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(76, 43, 226, 0.2);
+    }
+
+    .form-file {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .form-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .form-file-label {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px dashed var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-file-label:hover {
+      border-color: var(--primary);
+      background: rgba(76, 43, 226, 0.05);
+    }
+
+    .form-file-preview {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .form-file-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 6px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .create-story-btn {
+      background-color: var(--success);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .create-story-btn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+
+    /* Story Categories */
+    .stories-category {
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      color: var(--dark);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stories-category i {
+      color: var(--primary);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .original-badge {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .user-badge {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    /* Delete Button */
+    .delete-btn {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-left: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .delete-btn:hover {
+      background-color: #d63031;
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      width: 80%;
+      max-width: 800px;
+      max-height: 80vh;
+      border-radius: 10px;
+      padding: 2rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .sidebar.collapsed {
+        transform: translateX(-100%);
+      }
+
+      .main-content.expanded {
+        margin-left: 0;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-container {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+
+      .header-left {
+        flex: 1;
+      }
+
+      .user-actions {
+        gap: 10px;
+      }
+
+      .logout-text {
+        display: none;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .search-filter {
+        flex-direction: column;
+      }
+
+      .filter-group {
+        justify-content: flex-start;
+      }
+
+      .about-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="#" class="sidebar-logo" id="sidebarLogo">
+        <i class="fas fa-book-open" style="color: #00ffdd;"></i>
+        <span class="sidebar-logo-text">ReadVerse+</span>
+      </a>
+      <button class="sidebar-collapse" id="sidebarCollapse">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+    </div>
+    
+    <nav class="sidebar-menu">
+      <ul>
+        <li class="menu-title">Main</li>
+        <li>
+          <a href="#" class="active" id="homeLink">
+            <i class="fas fa-home"></i>
+            <span class="nav-link-text">Home</span>
+          </a>
+        </li>
+        
+        <li class="menu-title">Discover</li>
+        <li>
+          <a href="#" id="favoritesLink">
+            <i class="fas fa-heart"></i>
+            <span class="nav-link-text">Favorites</span>
+            <span class="badge" id="favoritesBadge">0</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="createLink">
+            <i class="fas fa-plus-circle"></i>
+            <span class="nav-link-text">Create Story</span>
+          </a>
+        </li>
+        
+        <li class="menu-title">Information</li>
+        <li>
+          <a href="#" id="featuresLink">
+            <i class="fas fa-star"></i>
+            <span class="nav-link-text">Features</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" id="aboutLink">
+            <i class="fas fa-info-circle"></i>
+            <span class="nav-link-text">About</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <button class="btn btn-outline" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="logout-text">Logout</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content" id="mainContent">
+    <header>
+      <div class="header-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo" id="homeButton">
+          <i class="fas fa-book-open" style="color: #00ffdd;"></i>
+          <span>ReadVerse+</span>
+        </div>
+      </div>
+      
+      <div class="user-actions">
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <span id="usernameDisplay">User</span>
+          <div class="user-dropdown">
+            <a href="#" id="dropdownLogout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="content-section active" id="homeContent">
+        <div class="section-header">
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all"><b>ALL</b></button>
+            <button class="filter-btn" data-filter="fantasy">Fantasy</button>
+            <button class="filter-btn" data-filter="mystery">Mystery</button>
+            <button class="filter-btn" data-filter="adventure">Adventure</button>
+            <button class="filter-btn" data-filter="sci-fi">Sci-Fi</button>
+          </div>
+          <button class="create-story-btn" id="showCreateFormBtn">
+            <i class="fas fa-plus"></i> Create Story
+          </button>
+        </div>
+
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="totalBooks">0</h3>
+              <p>Total Stories</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="favoriteBooks">0</h3>
+              <p>Favorites</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="userStoriesCount">0</h3>
+              <p>User Stories</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-filter">
+          <input
+            type="text"
+            class="search-bar"
+            id="searchInput"
+            placeholder="Search stories by title or description..."
+          />
+        </div>
+
+        <h3 class="stories-category">
+          <i class="fas fa-crown"></i> Original Stories
+        </h3>
+        <div class="book-grid" id="originalBooksContainer"></div>
+
+        <h3 class="stories-category">
+          <i class="fas fa-users"></i> Stories by Users
+        </h3>
+        <div class="book-grid" id="userBooksContainer"></div>
+      </div>
+
+      <div class="content-section" id="createContent">
+        <div class="section-header">
+          <h2 class="section-title">Create Your Story</h2>
+        </div>
+        
+        <div class="create-form">
+          <form id="storyForm">
+            <div class="form-group">
+              <label for="storyTitle" class="form-label">Story Title</label>
+              <input
+                type="text"
+                id="storyTitle"
+                class="form-control"
+                placeholder="Enter your story title"
+                required
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="storyGenre" class="form-label">Genre</label>
+              <select id="storyGenre" class="form-select" required>
+                <option value="">Select a genre</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="mystery">Mystery</option>
+                <option value="adventure">Adventure</option>
+                <option value="sci-fi">Sci-Fi</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="storyCover" class="form-label">Cover Image</label>
+              <div class="form-file">
+                <input
+                  type="file"
+                  id="storyCover"
+                  class="form-file-input"
+                  accept="image/*"
+                />
+                <label for="storyCover" class="form-file-label">
+                  <i class="fas fa-image"></i> Choose an image
+                </label>
+                <div class="form-file-preview" id="coverPreview"></div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="storyDescription" class="form-label">Description</label>
+              <textarea
+                id="storyDescription"
+                class="form-control"
+                placeholder="Enter a brief description of your story"
+                required
+              ></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="storyContent" class="form-label">Story Content</label>
+              <textarea
+                id="storyContent"
+                class="form-control"
+                placeholder="Write your story here..."
+                required
+              ></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-save"></i> Publish Story
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="content-section" id="featuresContent">
+        <div class="section-header">
+          <h2 class="section-title">Features</h2>
+        </div>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-book-open"></i>
+            </div>
+            <h3 class="feature-title">Extensive Library</h3>
+            <p class="feature-desc">Access a wide collection of stories across multiple genres.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3 class="feature-title">Favorites System</h3>
+            <p class="feature-desc">Save your favorite stories for quick access and create personalized reading lists.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-plus-circle"></i>
+            </div>
+            <h3 class="feature-title">Create Stories</h3>
+            <p class="feature-desc">Write and publish your own stories to share with the community.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-moon"></i>
+            </div>
+            <h3 class="feature-title">Dark/Light Mode</h3>
+            <p class="feature-desc">Switch between themes for comfortable reading in any lighting condition.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3 class="feature-title">Responsive Design</h3>
+            <p class="feature-desc">Enjoy seamless reading experience on any device, from desktop to mobile.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="feature-title">Simple Stats</h3>
+            <p class="feature-desc">The number of stories available here and the number of stories you like.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section" id="aboutContent">
+        <div class="section-header">
+          <h2 class="section-title">About ReadVerse+</h2>
+        </div>
+        
+        <div class="about-content">
+          <div class="about-header">
+            <div class="about-logo">
+              <i class="fas fa-book-open" style="color: #00ffdd;"></i>
+            </div>
+            <div>
+              <h1 class="about-title">ReadVerse+</h1>
+            </div>
+          </div>
+          
+          <p class="about-text">
+            ReadVerse+ is a modern digital reading platform designed to spark a love for reading through an engaging and visually appealing experience.
+            Created & developed by <b>GishhGNTG</b>, ReadVerse+ offers a carefully curated collection of stories across a wide range of genres.
+          </p>
+          
+          <p class="about-text">
+            With its intuitive design, attractive interface, and seamless accessibility across all devices, ReadVerse+ invites readers of all ages to dive into the world of stories and rediscover the joy of reading.
+          </p>
+          
+          <div class="about-details">
+            <div class="detail-card">
+              <p class="detail-title">Created & Developed By</p>
+              <p class="detail-value">GishhGNTG</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const username = localStorage.getItem("username");
+    if (!username) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("usernameDisplay").textContent = username;
+      document.getElementById("userAvatar").textContent = username
+        .charAt(0)
+        .toUpperCase();
+    }
+
+    // Initialize books array with default stories
+    let books = [
+      {
+        id: 1,
+        title: "The Lost Horizon",
+        description:
+          "Geologist Alvaro joins an expedition to a mysterious Pacific island, searching for untapped oil reserves. But when their plane crashes, he and his team uncover ancient ruins and encounter strange beings hidden in the jungle.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Ftlh.jpg?1744545826745",
+        genre: "adventure",
+        file: "story1.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 2,
+        title: "Shadows of the Glass Garden",
+        description:
+          "In a modern city where dreams can take root and grow into reality, three teens—Akmal, Beryl, and Said—uncover a conspiracy hidden within a strange, forbidden garden.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2F89eaafd0-e1d8-4a8f-9149-d6a4754a50bb.WhatsApp%20Image%202025-04-14%20at%2017.13.18_135391a0.jpg?1744625616668",
+        genre: "fantasy",
+        file: "story2.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 3,
+        title: "Guardians of the Crystal Vale",
+        description:
+          "When an ancient force begins corrupting the magical forests of Elowyn, two unlikely heroes—Rafif and Fayyadh—must rise and journey into a forgotten realm to save the world they love",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2F8c9ae0dd-5a00-4dff-8f40-1daa1bac511d.WhatsApp%20Image%202025-04-14%20at%2016.50.26_aa79ebb5.jpg?1744624307275",
+        genre: "fantasy",
+        file: "story3.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 4,
+        title: "The Clockmaker's Secret",
+        description:
+          "A man inherits a strange watch shop from his grandfather and uncovers a time-altering secret buried in the village's forgotten past.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Ftcs.jpg?1744545863193",
+        genre: "mystery",
+        file: "story4.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 5,
+        title: "City in the Sky",
+        description:
+          "In a floating city above the clouds, a rebellious orphan discovers he may be the key to unlocking ancient magic sealed away for centuries.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fcits.jpg?1744545808259",
+        genre: "sci-fi",
+        file: "story5.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 6,
+        title: "Thorn King's Heir",
+        description:
+          "A cursed prince raised in secret discovers his true heritage and must reclaim a shattered kingdom haunted by ancient beasts and betrayal.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2F1acc1a5d-88d5-4beb-a014-a1d1f117cebe.WhatsApp%20Image%202025-04-14%20at%2017.22.37_e63e3ff1.jpg?1744626172662",
+        genre: "fantasy",
+        file: "story6.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 7,
+        title: "Vanta Protocol",
+        description:
+          "In a dystopian future where AI governs society, a rogue scientist discovers a program capable of rewriting human memories—and must choose between control or chaos.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fd9357138-74fe-40a3-aadf-d9d25fec2d2b.WhatsApp%20Image%202025-04-14%20at%2017.08.48_9c45e344.jpg?1744625347349",
+        genre: "sci-fi",
+        file: "story7.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 8,
+        title: "The Trail Beyond Emberpeak",
+        description:
+          "In a wild realm of treacherous peaks and forgotten gods, a young cartographer sets off on a journey to chart the uncharted—and discovers an ancient secret hidden in the earth.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Ff3780f78-1d7d-4483-a356-645c79921bc5.WhatsApp%20Image%202025-04-14%20at%2017.18.44_39c54917.jpg?1744625947941",
+        genre: "adventure",
+        file: "story8.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 9,
+        title: "Echoes From The Deep",
+        description:
+          "A deep-sea research team uncovers an ancient shipwreck at the bottom of the ocean. But as they explore, something wakes up—and it's been waiting for centuries.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Feftd.jpg?1744545774645",
+        genre: "sci-fi",
+        file: "story9.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+      {
+        id: 10,
+        title: "The Vanishing Hour",
+        description:
+          "Weird things keep disappearing around Tiddleton—books, socks, even a giant flamingo statue. Max and Juniper team up to catch the thief, but they weren't ready for what they'd find.",
+        cover:
+          "https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Ftvh.jpg?1744545829275",
+        genre: "mystery",
+        file: "story10.html",
+        isNew: false,
+        isFavorited: false,
+        isOriginal: true
+      },
+    ];
+
+    // Load user-created stories from localStorage
+    const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+    books = [...books, ...userStories];
+
+    const originalBooksContainer = document.getElementById("originalBooksContainer");
+    const userBooksContainer = document.getElementById("userBooksContainer");
+    const searchInput = document.getElementById("searchInput");
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const dropdownLogout = document.getElementById("dropdownLogout");
+    const homeButton = document.getElementById("homeButton");
+    const totalBooksEl = document.getElementById("totalBooks");
+    const favoriteBooksEl = document.getElementById("favoriteBooks");
+    const userStoriesCountEl = document.getElementById("userStoriesCount");
+    const favoritesBadge = document.getElementById("favoritesBadge");
+    const themeToggle = document.getElementById("themeToggle");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarCollapse = document.getElementById("sidebarCollapse");
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mainContent = document.getElementById("mainContent");
+    const showCreateFormBtn = document.getElementById("showCreateFormBtn");
+    
+    const homeLink = document.getElementById("homeLink");
+    const featuresLink = document.getElementById("featuresLink");
+    const aboutLink = document.getElementById("aboutLink");
+    const favoritesLink = document.getElementById("favoritesLink");
+    const createLink = document.getElementById("createLink");
+    
+    const homeContent = document.getElementById("homeContent");
+    const featuresContent = document.getElementById("featuresContent");
+    const aboutContent = document.getElementById("aboutContent");
+    const createContent = document.getElementById("createContent");
+    
+    const storyForm = document.getElementById("storyForm");
+    const storyTitle = document.getElementById("storyTitle");
+    const storyGenre = document.getElementById("storyGenre");
+    const storyCover = document.getElementById("storyCover");
+    const storyDescription = document.getElementById("storyDescription");
+    const storyContent = document.getElementById("storyContent");
+    const coverPreview = document.getElementById("coverPreview");
+
+    function init() {
+      loadFavorites();
+      checkDarkMode();
+      renderBooks();
+      updateStats();
+      setupEventListeners();
+    }
+
+    function loadFavorites() {
+      const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      books.forEach((book) => {
+        book.isFavorited = savedFavorites.includes(book.id);
+      });
+    }
+
+    function checkDarkMode() {
+      const darkMode = localStorage.getItem("darkMode") === "true";
+      if (darkMode) {
+        document.body.classList.add("dark-mode");
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode", isDark);
+      themeToggle.innerHTML = isDark
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+    }
+
+    function renderBooks() {
+      const filteredBooks = filterBooks();
+      const originalBooks = filteredBooks.filter(book => book.isOriginal);
+      const userBooks = filteredBooks.filter(book => !book.isOriginal);
+
+      renderBookSection(originalBooks, originalBooksContainer);
+      renderBookSection(userBooks, userBooksContainer);
+    }
+
+    function renderBookSection(booksToRender, container) {
+      if (booksToRender.length === 0) {
+        container.innerHTML = '<div class="no-books"><p>No stories found</p></div>';
+        return;
+      }
+
+      container.innerHTML = booksToRender
+        .map(
+          (book) => `
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('${
+                      book.cover
+                    }')">
+                        ${
+                          book.isNew
+                            ? '<span class="book-badge">NEW</span>'
+                            : ""
+                        }
+                        ${
+                          book.isOriginal
+                            ? '<span class="book-badge original-badge">ORIGINAL</span>'
+                            : '<span class="book-badge user-badge">USER</span>'
+                        }
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">${book.genre}</p>
+                        <p class="book-desc">${book.description}</p>
+                        <div class="book-actions">
+                            <button class="action-btn read-btn" data-id="${
+                              book.id
+                            }">
+                                <i class="fas fa-book-open"></i>
+                                Read
+                            </button>
+                            <div>
+                              <button class="action-btn fav-btn ${
+                                book.isFavorited ? "favorited" : ""
+                              }" data-id="${book.id}">
+                                  <i class="${
+                                    book.isFavorited ? "fas" : "far"
+                                  } fa-heart"></i>
+                              </button>
+                              ${
+                                !book.isOriginal 
+                                  ? `<button class="delete-btn" data-id="${book.id}">
+                                      <i class="fas fa-trash"></i>
+                                    </button>`
+                                  : ''
+                              }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        )
+        .join("");
+
+      document.querySelectorAll(".read-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const book = books.find((b) => b.id == btn.dataset.id);
+          if (book) {
+            if (book.isUserCreated || !book.isOriginal) {
+              showStoryModal(book);
+            } else {
+              window.location.href = book.file;
+            }
+          }
+        });
+      });
+
+      document.querySelectorAll(".fav-btn").forEach((btn) => {
+        btn.addEventListener("click", () => toggleFavorite(btn.dataset.id));
+      });
+
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteStory(btn.dataset.id);
+        });
+      });
+    }
+
+    function showStoryModal(book) {
+      const modalHTML = `
+        <div class="modal" id="storyModal">
+          <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <h2 style="color: var(--dark); margin-bottom: 1rem;">${book.title}</h2>
+            <p style="color: var(--text-color); margin-bottom: 1.5rem; text-transform: capitalize;">Genre: ${book.genre}</p>
+            <div style="margin-bottom: 1.5rem;">
+              <img src="${book.cover}" alt="${book.title}" style="max-width: 100%; max-height: 300px; display: block; margin: 0 auto; border-radius: 8px;">
+            </div>
+            <p style="color: var(--text-color); margin-bottom: 1.5rem; font-style: italic;">${book.description}</p>
+            <div style="color: var(--text-color); white-space: pre-line; line-height: 1.6;">${book.content}</div>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      
+      document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('storyModal').remove();
+      });
+      
+      document.getElementById('storyModal').addEventListener('click', (e) => {
+        if (e.target.id === 'storyModal') {
+          document.getElementById('storyModal').remove();
+        }
+      });
+    }
+
+    function toggleFavorite(bookId) {
+      const book = books.find((b) => b.id == bookId);
+      if (!book) return;
+
+      book.isFavorited = !book.isFavorited;
+      const favorites = books.filter((b) => b.isFavorited).map((b) => b.id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+
+      renderBooks();
+      updateStats();
+    }
+
+    function deleteStory(bookId) {
+      if (confirm('Are you sure you want to delete this story?')) {
+        // Remove from books array
+        books = books.filter(book => book.id != bookId);
+        
+        // Update localStorage
+        const userStories = books.filter(book => !book.isOriginal);
+        localStorage.setItem('userStories', JSON.stringify(userStories));
+        
+        // Update favorites
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const updatedFavorites = favorites.filter(id => id != bookId);
+        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+        
+        renderBooks();
+        updateStats();
+      }
+    }
+
+    function filterBooks() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const activeFilter = document.querySelector(".filter-btn.active")?.dataset.filter || "all";
+
+      return books.filter((book) => {
+        const matchesSearch =
+          book.title.toLowerCase().includes(searchTerm) ||
+          book.description.toLowerCase().includes(searchTerm);
+
+        const matchesFilter =
+          activeFilter === "all" || book.genre === activeFilter;
+
+        return matchesSearch && matchesFilter;
+      });
+    }
+
+    function updateStats() {
+      totalBooksEl.textContent = books.length;
+      const favoriteCount = books.filter((b) => b.isFavorited).length;
+      favoriteBooksEl.textContent = favoriteCount;
+      favoritesBadge.textContent = favoriteCount;
+      userStoriesCountEl.textContent = books.filter(book => !book.isOriginal).length;
+    }
+
+    function toggleSidebar() {
+      sidebar.classList.toggle("active");
+    }
+
+    function toggleSidebarCollapse() {
+      sidebar.classList.toggle("collapsed");
+      mainContent.classList.toggle("expanded");
+      
+      if (sidebar.classList.contains("collapsed")) {
+        sidebarCollapse.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      } else {
+        sidebarCollapse.innerHTML = '<i class="fas fa-chevron-left"></i>';
+      }
+    }
+
+    function showContent(contentToShow) {
+      document.querySelectorAll(".content-section").forEach(section => {
+        section.classList.remove("active");
+      });
+      
+      contentToShow.classList.add("active");
+      
+      document.querySelectorAll(".sidebar-menu a").forEach(link => {
+        link.classList.remove("active");
+      });
+      
+      let activeLink;
+      if (contentToShow === homeContent) {
+        activeLink = homeLink;
+      } else if (contentToShow === featuresContent) {
+        activeLink = featuresLink;
+      } else if (contentToShow === aboutContent) {
+        activeLink = aboutLink;
+      } else if (contentToShow === createContent) {
+        activeLink = createLink;
+      }
+      
+      if (activeLink) {
+        activeLink.classList.add("active");
+      }
+      
+      if (window.innerWidth <= 992) {
+        sidebar.classList.remove("active");
+      }
+    }
+
+    function handleCoverUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        coverPreview.innerHTML = `<img src="${e.target.result}" alt="Cover Preview">`;
+        coverPreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleStorySubmit(event) {
+      event.preventDefault();
+      
+      // Generate a unique ID for the new story
+      const newId = books.length > 0 ? Math.max(...books.map(b => b.id)) + 1 : 1;
+      
+      // Get the cover image as data URL
+      let coverUrl = 'https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/default-cover.jpg?1744545778555';
+      if (storyCover.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          coverUrl = e.target.result;
+          saveNewStory(newId, coverUrl);
+        };
+        reader.readAsDataURL(storyCover.files[0]);
+      } else {
+        saveNewStory(newId, coverUrl);
+      }
+    }
+
+    function saveNewStory(id, coverUrl) {
+      const newStory = {
+        id,
+        title: storyTitle.value,
+        description: storyDescription.value,
+        content: storyContent.value,
+        cover: coverUrl,
+        genre: storyGenre.value,
+        isNew: true,
+        isFavorited: false,
+        isUserCreated: true,
+        isOriginal: false
+      };
+      
+      // Add to books array
+      books.push(newStory);
+      
+      // Save to localStorage
+      const userStories = books.filter(book => !book.isOriginal);
+      localStorage.setItem('userStories', JSON.stringify(userStories));
+      
+      // Reset form
+      storyForm.reset();
+      coverPreview.style.display = 'none';
+      coverPreview.innerHTML = '';
+      
+      // Show home content with the new story
+      showContent(homeContent);
+      renderBooks();
+      updateStats();
+      
+      // Scroll to the new story
+      setTimeout(() => {
+        const newStoryElement = document.querySelector(`.read-btn[data-id="${id}"]`);
+        if (newStoryElement) {
+          newStoryElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+
+    function setupEventListeners() {
+      searchInput.addEventListener("input", () => renderBooks());
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderBooks();
+        });
+      });
+
+      logoutBtn.addEventListener("click", logout);
+      dropdownLogout.addEventListener("click", logout);
+
+      function logout() {
+        localStorage.removeItem("username");
+        window.location.href = "login.html";
+      }
+
+      homeButton.addEventListener("click", () => {
+        showContent(homeContent);
+      });
+
+      homeLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        showContent(homeContent);
+      });
+
+      featuresLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        showContent(featuresContent);
+      });
+
+      aboutLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        showContent(aboutContent);
+      });
+
+      createLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        showContent(createContent);
+      });
+
+      showCreateFormBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showContent(createContent);
+      });
+
+      favoritesLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+        document.querySelector(".filter-btn[data-filter='all']").classList.add("active");
+        searchInput.value = "";
+        renderBooks(books.filter(book => book.isFavorited));
+        showContent(homeContent);
+      });
+
+      themeToggle.addEventListener("click", toggleDarkMode);
+
+      mobileMenuBtn.addEventListener("click", toggleSidebar);
+
+      sidebarCollapse.addEventListener("click", toggleSidebarCollapse);
+
+      document.addEventListener("click", (e) => {
+        if (window.innerWidth <= 992 && 
+            !sidebar.contains(e.target) && 
+            !mobileMenuBtn.contains(e.target) &&
+            sidebar.classList.contains("active")) {
+          toggleSidebar();
+        }
+      });
+
+      storyCover.addEventListener('change', handleCoverUpload);
+      storyForm.addEventListener('submit', handleStorySubmit);
+
+      showContent(homeContent);
+    }
+
+    init();
+  </script>
+</body>
+</html>

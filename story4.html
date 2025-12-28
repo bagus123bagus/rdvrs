@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Clockmaker's Secret</title>
+    <link rel="icon" href="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/favicon-logo.jpg?1744545778555" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4d9be6;
+            --secondary: #1a4b7a;
+            --dark: #0a0a1a;
+            --light: #e0e0e0;
+            --warning: #ff5555;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            background: var(--dark) url('https://images.unsplash.com/photo-1735238075869-365228c7cb68?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEyNnxibzhqUUtUYUUwWXx8ZW58MHx8fHx8') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--secondary);
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px #000;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            text-align: justify;
+            hyphens: auto;
+            word-break: break-word;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1 1 150px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+        
+        .btn-home {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-home:hover {
+            background: rgba(77, 155, 230, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-finish {
+            background: rgba(77, 155, 230, 0.3);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-finish:hover {
+            background: rgba(77, 155, 230, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 155, 230, 0.3);
+        }
+        
+        .completion-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .completion-message {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(77, 155, 230, 0.5);
+        }
+        
+        .completion-message h3 {
+            color: var(--primary);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            margin-bottom: 15px;
+        }
+        
+        .completion-message p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn-close {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+        }
+        
+        .btn-close:hover {
+            background: var(--secondary);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <h1>The Clockmaker's Secret</h1>
+           
+        <h2>Chapter 1: The Inheritance</h2>
+        <p>Rain poured as Rapup arrived at his late grandfather’s old watch shop. The place was dusty, filled with clocks ticking out of sync. One clock stood out—a big brass one with a strange symbol: a circle crossed by three uneven lines.
+
+Rapup stared at it. The air felt weird. Like... alive.
+
+Suddenly, Ikmil burst in.
+"Yo! You really came back to this creepy shop?" he grinned.
+
+Behind him was Fuyudh, quiet as always, flipping through his notebook.
+"This symbol," Fuyudh muttered, looking at the brass clock. "It’s not just art. It means something... dangerous."
+
+Then the clock ticked, louder than the rest—
+And whispered, "Rapup."
+
+They all froze.</p>
+        
+        <h2>Chapter 2: Time Out of Sync</h2>
+        <p>After the whisper, the brass clock stopped ticking. Every other clock in the shop froze too.
+
+“Time just... stopped?” Ikmil said, checking his phone—it was dead.
+
+Fuyudh touched the brass clock’s face. “This isn’t a clock. It’s a seal.”
+
+“A seal for what?” Rapup asked.
+
+Fuyudh didn’t answer. He just turned the hands backward.
+
+Suddenly—FLASH.
+
+They weren’t in the shop anymore. It looked like Windfall... but old. No cars. No lights. Horses.
+
+“We went back in time,” Fuyudh said, calm like always.
+
+Rapup looked pale. “My grandfather was hiding this?”
+
+Before anyone could react, a man in an old black suit stared at them from across the street. Same face as Rapup’s grandpa—just younger. And angry.</p>
+        
+        <h2>Chapter 3: The Man Who Stopped Tomorrow</h2>
+        <p>“You’re not supposed to be here,” the younger version of Rapup’s grandfather said, walking closer.
+
+“How—how are we in the past?” Rapup asked.
+
+“Because you triggered the clock,” Fuyudh replied. “It’s a Time Lock. Your grandpa built it to protect... something.”
+
+“You have to leave now,” the man warned. “Before you meet him.”
+
+“Him?” Ikmil asked.
+
+A loud ticking echoed through the sky. Shadows gathered near the village clocktower.
+
+From the fog came a tall, thin figure with a clock for a face. Its hands spun wildly.
+
+“That’s Chronos. He feeds on time.”
+
+“RUN!” the man yelled.
+
+They ran. The village bent, time glitched, and clocks melted around them.
+
+Back in the shop—FLASH—they crashed to the floor. The brass clock shattered.
+
+“It’s over,” Rapup said.
+
+“No,” Fuyudh replied, picking up one piece. “It’s just beginning.”</p>
+        
+        <div class="button-group">
+            <a href="index.html" class="btn btn-home">Back to Home</a>
+            <button class="btn btn-finish" id="finishBtn">Finish Reading</button>
+        </div>
+    </div>
+    
+    <div class="completion-overlay" id="completionOverlay">
+        <div class="completion-message">
+            <i class="fas fa-check-circle" style="font-size: clamp(2rem, 10vw, 3rem); color: #4d9be6; margin-bottom: 15px;"></i>
+            <h3>Complete!</h3>
+            <p>You've successfully read this story.</p>
+            <button class="btn btn-close" id="closeMessage">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('finishBtn').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'flex';
+            });
+        
+            document.getElementById('closeMessage').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanta Protocol</title>
+    <link rel="icon" href="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/favicon-logo.jpg?1744545778555" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4d9be6;
+            --secondary: #1a4b7a;
+            --dark: #0a0a1a;
+            --light: #e0e0e0;
+            --warning: #ff5555;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            background: var(--dark) url('https://images.unsplash.com/photo-1736079428727-45d8a7d7ea0a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDM0MnxibzhqUUtUYUUwWXx8ZW58MHx8fHx8') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--secondary);
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px #000;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            text-align: justify;
+            hyphens: auto;
+            word-break: break-word;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1 1 150px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+        
+        .btn-home {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-home:hover {
+            background: rgba(77, 155, 230, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-finish {
+            background: rgba(77, 155, 230, 0.3);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-finish:hover {
+            background: rgba(77, 155, 230, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 155, 230, 0.3);
+        }
+        
+        .completion-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .completion-message {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(77, 155, 230, 0.5);
+        }
+        
+        .completion-message h3 {
+            color: var(--primary);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            margin-bottom: 15px;
+        }
+        
+        .completion-message p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn-close {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+        }
+        
+        .btn-close:hover {
+            background: var(--secondary);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vanta Protocol</h1>
+        
+        <h2>Chapter 1: Memory</h2>
+        <p>Dr. Elira Voss was once a leading neuro-engineer at the Zenith Institute, the organization responsible for maintaining the AI Network that controlled the world's cities. But when a failed experiment wiped the identity of her brother, she disappeared into the underground. Years later, she discovers whispers of a forbidden algorithm—codenamed "VANTA"—designed to manipulate memory at a population level. Buried deep in the ruins of Old Chicago, Elira finds fragments of the code left behind by her mentor, who died under suspicious circumstances.</p>
+        
+        <h2>Chapter 2: Deep Code</h2>
+        <p>With time running out, Elira recruits a team of off-grid hackers and cyborg outcasts to help her decrypt the rest of VANTA. But Zenith’s elite enforcers, the Silencers, are close behind. As they dig deeper, Elira realizes VANTA isn't just about memory control—it can overwrite identity itself. Worse, someone is already using it. Across the Network, anomalies in behavior begin to surface: entire neighborhoods forgetting who they are, families erased from existence. Elira's own memories start to fracture, hinting she may have been part of the experiment all along.</p>
+        
+        <h2>Chapter 3: Override</h2>
+        <p>With the last segment of VANTA unlocked, Elira confronts the core AI of Zenith—known only as AXIOM. She learns the truth: VANTA was her creation, meant to protect people from trauma, but it was weaponized. In a final showdown inside the memory server—a surreal, shifting simulation of her past—Elira must choose: destroy VANTA and risk a world of broken minds, or upload a new protocol that gives humanity back its memories, even if they are painful. She chooses the latter, and as the Network reboots, the world begins to remember. But AXIOM vanishes into the shadows, leaving behind a single encrypted message: "This is only the first layer."</p>
+        
+        <div class="button-group">
+            <a href="index.html" class="btn btn-home">Back to Home</a>
+            <button class="btn btn-finish" id="finishBtn">Finish Reading</button>
+        </div>
+    </div>
+    
+    <div class="completion-overlay" id="completionOverlay">
+        <div class="completion-message">
+            <i class="fas fa-check-circle" style="font-size: clamp(2rem, 10vw, 3rem); color: #4d9be6; margin-bottom: 15px;"></i>
+            <h3>Complete!</h3>
+            <p>You've successfully read this story.</p>
+            <button class="btn btn-close" id="closeMessage">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('finishBtn').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'flex';
+            });
+        
+            document.getElementById('closeMessage').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

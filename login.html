@@ -1,0 +1,540 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReadVerse+</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/favicon-logo.jpg?1744545778555" type="image/png">
+</head>
+  <style>
+        :root {
+            --primary-color: #4c2be2;
+            --secondary-color: #8b3fc9;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+            --error-color: #ff4444;
+            --success-color: #00C851;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.5s ease;
+            position: relative;
+            background-color: #f0f2f5;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .auth-box {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: scale(0.95);
+            opacity: 0;
+            animation: popUp 0.5s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+        
+        @keyframes popUp {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .auth-box h2 {
+            margin: 0 0 25px 0;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 15px;
+            padding-right: 40px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: var(--light-gray);
+        }
+        
+        .auth-form input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+            outline: none;
+            background-color: white;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+        
+        .auth-form button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .auth-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+        
+        .auth-form button:active {
+            transform: translateY(0);
+        }
+        
+        .switch-auth {
+            margin-top: 20px;
+            font-size: 15px;
+            text-align: center;
+            color: #555;
+        }
+        
+        .switch-auth a {
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .switch-auth a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            margin: 5px 0 10px;
+            font-size: 14px;
+            min-height: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .success-message {
+            color: var(--success-color);
+            margin: 5px 0 10px;
+            font-size: 14px;
+            min-height: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .bg-selector {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 2;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+        
+        .bg-thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            object-fit: cover;
+        }
+        
+        .bg-thumbnail:hover {
+            transform: scale(1.1);
+        }
+        
+        .bg-thumbnail.active {
+            border-color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .auth-box {
+                padding: 25px;
+                max-width: 350px;
+            }
+            
+            .auth-box h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .auth-form input {
+                padding: 12px;
+                padding-right: 40px;
+            }
+            
+            .auth-form button {
+                padding: 12px;
+            }
+            
+            .bg-thumbnail {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .auth-box {
+                padding: 20px;
+                max-width: 320px;
+            }
+            
+            body::after {
+                background: rgba(0, 0, 0, 0.6);
+            }
+            
+            .bg-selector {
+                bottom: 10px;
+            }
+        }
+    </style>
+<head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box" id="loginBox">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h2>Welcome</h2>
+            <form class="auth-form" id="loginForm">
+                <div class="input-group">
+                    <input type="text" placeholder="Username" id="loginUsername" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" id="loginPassword" required>
+                    <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
+                </div>
+                <div class="error-message" id="loginError"></div>
+                <button type="submit">Login</button>
+                <div class="switch-auth">
+                    Don't have an account? <a href="#" id="showSignup">Sign up</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-box" id="signupBox" style="display: none;">
+            <div class="logo">
+                <i class="fas fa-book-reader"></i>
+            </div>
+            <h2>Join ReadVerse+</h2>
+            <form class="auth-form" id="signupForm">
+                <div class="input-group">
+                    <input type="text" placeholder="Username" id="signupUsername" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" id="signupPassword" required>
+                    <i class="fas fa-eye password-toggle" id="toggleSignupPassword"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Confirm Password" id="signupConfirmPassword" required>
+                    <i class="fas fa-eye password-toggle" id="toggleSignupConfirmPassword"></i>
+                </div>
+                <div class="error-message" id="signupError"></div>
+                <div class="success-message" id="signupSuccess"></div>
+                <button type="submit">Create Account</button>
+                <div class="switch-auth">
+                    Already have an account? <a href="#" id="showLogin">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-selector">
+        <img src="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fbg1.jpg?1744545738063" class="bg-thumbnail active" data-bg="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fbg1.jpg?1744545738063" alt="bg1.jpg">
+        <img src="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fbg2.jpg?1744547755190" class="bg-thumbnail" data-bg="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fbg2.jpg?1744547755190" alt="Books Background">
+        <img src="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fbg3.jpg?1744545768832" class="bg-thumbnail" data-bg="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/thumbnails%2Fbg3.jpg?1744545768832" alt="Study Background">
+    
+    </div>
+
+    <script>
+        if (localStorage.getItem('username')) {
+            window.location.href = 'index.html';
+        }
+      
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginBox = document.getElementById('loginBox');
+        const signupBox = document.getElementById('signupBox');
+        const showSignup = document.getElementById('showSignup');
+        const showLogin = document.getElementById('showLogin');
+        const loginError = document.getElementById('loginError');
+        const signupError = document.getElementById('signupError');
+        const signupSuccess = document.getElementById('signupSuccess');
+        const bgThumbnails = document.querySelectorAll('.bg-thumbnail');
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const toggleSignupConfirmPassword = document.getElementById('toggleSignupConfirmPassword');
+        const loginPassword = document.getElementById('loginPassword');
+        const signupPassword = document.getElementById('signupPassword');
+        const signupConfirmPassword = document.getElementById('signupConfirmPassword');
+
+    
+        toggleLoginPassword.addEventListener('click', function() {
+            const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            loginPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        toggleSignupPassword.addEventListener('click', function() {
+            const type = signupPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        toggleSignupConfirmPassword.addEventListener('click', function() {
+            const type = signupConfirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupConfirmPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        bgThumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+               
+                bgThumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const bgUrl = this.getAttribute('data-bg');
+                document.body.style.backgroundImage = `url('${bgUrl}')`;
+                
+                localStorage.setItem('selectedBg', bgUrl);
+            });
+        });
+
+        const savedBg = localStorage.getItem('selectedBg');
+        if (savedBg) {
+            document.body.style.backgroundImage = `url('${savedBg}')`;
+           
+            bgThumbnails.forEach(thumb => {
+                if (thumb.getAttribute('data-bg') === savedBg) {
+                    thumb.classList.add('active');
+                }
+            });
+        } else {
+            document.body.style.backgroundImage = 'url(https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)';
+        }
+        showSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginBox.style.display = 'none';
+            signupBox.style.display = 'block';
+            signupBox.style.animation = 'none';
+            void signupBox.offsetWidth;
+            signupBox.style.animation = 'popUp 0.5s forwards';
+            signupError.textContent = '';
+            signupSuccess.textContent = '';
+        });
+
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupBox.style.display = 'none';
+            loginBox.style.display = 'block';
+            loginBox.style.animation = 'none';
+            void loginBox.offsetWidth;
+            loginBox.style.animation = 'popUp 0.5s forwards';
+            loginError.textContent = '';
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+          
+            if (!username || !password) {
+                loginError.textContent = 'Please fill in all fields';
+                return;
+            }
+         
+            const storedUser = localStorage.getItem(username);
+            
+            if (storedUser) {
+                const userData = JSON.parse(storedUser);
+                if (userData.password === password) {
+                   
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('lastLogin', new Date().toISOString());
+                    window.location.href = 'index.html';
+                } else {
+                    loginError.textContent = 'Incorrect password!';
+                    loginPassword.focus();
+                }
+            } else {
+                loginError.textContent = 'Username not found!';
+                document.getElementById('loginUsername').focus();
+            }
+        });
+      
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+          
+            signupError.textContent = '';
+            signupSuccess.textContent = '';
+            
+            if (!username || !password || !confirmPassword) {
+                signupError.textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            if (username.length < 4) {
+                signupError.textContent = 'Username must be at least 4 characters';
+                document.getElementById('signupUsername').focus();
+                return;
+            }
+            
+            if (password.length < 6) {
+                signupError.textContent = 'Password must be at least 6 characters';
+                document.getElementById('signupPassword').focus();
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                signupError.textContent = 'Passwords do not match!';
+                document.getElementById('signupConfirmPassword').focus();
+                return;
+            }
+            
+            if (localStorage.getItem(username)) {
+                signupError.textContent = 'Username already exists!';
+                document.getElementById('signupUsername').focus();
+                return;
+            }
+            
+            const userData = {
+                username: username,
+                password: password,
+                stats: {
+                    favorites: 0,
+                    readingNow: 0,
+                    booksRead: 0,
+                    joinedDate: new Date().toISOString()
+                },
+                favorites: [],
+                readingNow: [],
+                booksRead: []
+            };
+          
+            localStorage.setItem(username, JSON.stringify(userData));
+            localStorage.setItem('username', username);
+            localStorage.setItem('lastLogin', new Date().toISOString());
+           
+            signupSuccess.textContent = 'Account created successfully! Redirecting...';
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        });
+      
+        showSignup.addEventListener('click', () => {
+            setTimeout(() => {
+                document.getElementById('signupUsername').focus();
+            }, 100);
+        });
+
+        showLogin.addEventListener('click', () => {
+            setTimeout(() => {
+                document.getElementById('loginUsername').focus();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

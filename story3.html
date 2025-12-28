@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardians of the Crystal Vale</title>
+    <link rel="icon" href="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/favicon-logo.jpg?1744545778555" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4d9be6;
+            --secondary: #1a4b7a;
+            --dark: #0a0a1a;
+            --light: #e0e0e0;
+            --warning: #ff5555;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            background: var(--dark) url('https://images.unsplash.com/photo-1743704458905-9edf92294d7e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDM2fGJvOGpRS1RhRTBZfHxlbnwwfHx8fHw%3D') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--secondary);
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px #000;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            text-align: justify;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+        }
+        
+        .btn-home {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-home:hover {
+            background: rgba(77, 155, 230, 0.2);
+        }
+        
+        .btn-finish {
+            background: rgba(77, 155, 230, 0.3);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-finish:hover {
+            background: rgba(77, 155, 230, 0.5);
+            box-shadow: 0 5px 15px rgba(77, 155, 230, 0.3);
+        }
+        
+        .completion-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .completion-message {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            max-width: 90%;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(77, 155, 230, 0.5);
+            margin: 0 15px;
+        }
+        
+        .completion-message h3 {
+            color: var(--primary);
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .completion-message p {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-close {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px 20px;
+        }
+        
+        .btn-close:hover {
+            background: var(--secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                padding: 30px;
+                margin: 40px auto;
+            }
+            
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            p {
+                font-size: 1.1rem;
+            }
+            
+            .button-group {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                width: auto;
+                min-width: 150px;
+                flex: 1;
+            }
+            
+            .completion-message {
+                padding: 30px;
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guardians of the Crystal Vale</h1>
+           
+        <h2>Chapter 1: The Vale Awakens</h2>
+        <p>Rafif, a clever but impulsive apprentice mage, and Fayyadh, a calm and skilled archer from the eastern highlands, lived in the quiet village of Lysmere. When strange black vines began spreading through the Crystal Vale—an enchanted forest once full of life—they are chosen by the village elders to investigate. Guided by an ancient spirit named Lumara, they learn that the corruption stems from a long-sealed gate that was never meant to open.</p>
+        
+        <h2>Chapter 2: Into the Broken Realm</h2>
+        <p>Their journey leads them into the Broken Realm, a hidden world behind the veil of Elowyn. There, the skies burn crimson and time moves unevenly. They must face shadowbeasts, deceitful mirror spirits, and a tyrant sorcerer known only as the Hollow King. Along the way, Rafif struggles with visions of power that tempt him to betray their cause, while Fayyadh’s steady heart becomes their anchor.</p>
+        
+        <h2>Chapter 3: Light from the Ashes</h2>
+        <p>At the heart of the Hollow King's fortress, Rafif and Fayyadh confront him with Lumara’s guidance. When Rafif falls into the trap of shadow magic, Fayyadh risks his life to bring him back. In a final act of friendship and sacrifice, they combine their powers—magic and will, light and focus—to shatter the Hollow King’s crown and reseal the gate. The corruption vanishes, and the Vale blooms anew. Rafif and Fayyadh return to Lysmere as heroes, forever changed by the path they chose together.</p>
+        
+      
+        <div class="button-group">
+            <a href="index.html" class="btn btn-home">Back to Home</a>
+            <button class="btn btn-finish" id="finishBtn">Finish Reading</button>
+        </div>
+    </div>
+    
+    <div class="completion-overlay" id="completionOverlay">
+        <div class="completion-message">
+            <i class="fas fa-check-circle" style="font-size: 3rem; color: #4d9be6; margin-bottom: 20px;"></i>
+            <h3>Expedition Complete</h3>
+            <p>You've successfully navigated the depths of "The Lost Horizon".</p>
+            <p>This discovery has been added to your research archives.</p>
+            <button class="btn btn-close" id="closeMessage">Return to Surface</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('finishBtn').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'flex';
+            });
+        
+            document.getElementById('closeMessage').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

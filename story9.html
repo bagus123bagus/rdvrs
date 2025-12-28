@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes From The Deep</title>
+    <link rel="icon" href="https://cdn.glitch.global/4554a6c6-c969-4bdc-a1d3-b5314ea51051/favicon-logo.jpg?1744545778555" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4d9be6;
+            --secondary: #1a4b7a;
+            --dark: #0a0a1a;
+            --light: #e0e0e0;
+            --warning: #ff5555;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            background: var(--dark) url('https://images.unsplash.com/photo-1744024450738-b040cffc7ff9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDM3fDZzTVZqVExTa2VRfHxlbnwwfHx8fHw%3D') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--secondary);
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px #000;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            border-bottom: 1px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            text-align: justify;
+            hyphens: auto;
+            word-break: break-word;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1 1 150px;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+        
+        .btn-home {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-home:hover {
+            background: rgba(77, 155, 230, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-finish {
+            background: rgba(77, 155, 230, 0.3);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-finish:hover {
+            background: rgba(77, 155, 230, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 155, 230, 0.3);
+        }
+        
+        .completion-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .completion-message {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(77, 155, 230, 0.5);
+        }
+        
+        .completion-message h3 {
+            color: var(--primary);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            margin-bottom: 15px;
+        }
+        
+        .completion-message p {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn-close {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+        }
+        
+        .btn-close:hover {
+            background: var(--secondary);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Echoes From The Deep</h1>
+        
+        <h2>Chapter 1: The Dive</h2>
+        <p>The research ship Nereid floated above the Pacific Ocean. Onboard, three scientists prepared to explore a strange signal detected at the ocean floor.
+
+Elira checked the control screen.
+“Signal's steady. We’re ready.”
+
+Ryne, the pilot, powered up the sub.
+“Descent started. Depth: 500 meters... 1000... 2000…”
+
+Taro, the engineer, monitored energy readings.
+“This signal isn’t natural. It's too regular.”
+
+At 11,000 meters, the sub reached the bottom.
+
+Lights flicked on.
+
+Before them was a huge object—metallic, smooth, not shaped like any ship.
+
+Elira stared.
+“That’s not a wreck. That’s… a structure.”</p>
+        
+        <h2>Chapter 2: The Discovery</h2>
+        <p>The sub’s lights illuminated a massive structure, buried deep beneath the ocean floor. It was cylindrical, with sharp edges and a pattern of markings that didn't belong to any known civilization.
+
+"Is this... alien?" Elira asked, her voice barely above a whisper.
+
+Keiji adjusted his glasses, studying the structure on his screen.
+“No sign of any human-made origin. It's far too advanced.”
+
+Ryne adjusted the sub’s position, inching closer to the object.
+“It looks like it’s been here for thousands of years... untouched.”
+
+The sub’s sensors flickered, and suddenly, a low hum reverberated through the hull. Taro checked the readings.
+
+"Something's... activating," Taro said, his fingers flying across the console. “We’re getting power fluctuations. It's waking up.”
+
+Elira’s heart raced. "We need to pull back—"
+
+Before she could finish, the entire sub jolted as a burst of energy shot from the structure. The walls of the sub shook.
+
+“We’re not alone down here.”</p>
+        
+        <h2>Chapter 3: Awakening</h2>
+        <p>The sub was thrown backward by the energy pulse, but Ryne quickly regained control. They were still alive, but the structure’s signal was now blaring on every monitor.
+
+“Shit! It's sending something—some kind of signal,” Keiji said, frantically typing.
+
+The lights in the sub flickered. Outside, the structure seemed to pulse, like it was alive, responding to the disturbance.
+
+“I don’t like this. Let’s go up!” Ryne shouted.
+
+“No.” Elira shook her head. “We’re too close to understanding it. If we leave now, we might never get another chance.”
+
+Suddenly, the sub’s hatch started to glow with an eerie blue light. The signal from the structure intensified, overwhelming their systems.
+
+“We’re losing control of the sub,” Taro said. “We can’t escape this unless we figure out what it wants.”
+
+Elira stared at the glowing hatch. The markings on the structure matched the strange symbols now appearing on their display.
+
+“I think it’s trying to communicate.”
+
+But before Elira could say more, the sub was pulled forward, toward the unknown structure, as if guided by an unseen force.</p>
+        
+        <div class="button-group">
+            <a href="index.html" class="btn btn-home">Back to Home</a>
+            <button class="btn btn-finish" id="finishBtn">Finish Reading</button>
+        </div>
+    </div>
+    
+    <div class="completion-overlay" id="completionOverlay">
+        <div class="completion-message">
+            <i class="fas fa-check-circle" style="font-size: clamp(2rem, 10vw, 3rem); color: #4d9be6; margin-bottom: 15px;"></i>
+            <h3>Complete!</h3>
+            <p>You've successfully read this story.</p>
+            <button class="btn btn-close" id="closeMessage">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('finishBtn').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'flex';
+            });
+        
+            document.getElementById('closeMessage').addEventListener('click', function() {
+                document.getElementById('completionOverlay').style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
